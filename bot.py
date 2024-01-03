@@ -43,16 +43,18 @@ def first_question(message):
     bot.send_message(message.chat.id, 'Число может быть ключем в словаре Python?', reply_markup=markup)
 
 
-@bot.message_handler()
+@bot.message_handler(content_types=['text'])
 def first_answer_second_question(message):
     if message.text == 'Да':
         global test_counter
         test_counter += 1
         print(test_counter)
     bot.send_message(message.chat.id, 'Ключевое слово Return останавливает выполнение функции?', reply_markup=markup)
+    second_answer_third_question(message)
+
+# @bot.message_handler()
 
 
-@bot.message_handler()
 def second_answer_third_question(message):
     if message.text == 'Да':
         global test_counter
