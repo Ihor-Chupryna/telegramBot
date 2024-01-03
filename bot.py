@@ -1,7 +1,7 @@
 import telebot
 import random
 
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 
 from info import bot_responses
 from data import load_user_data, save_user_data
@@ -24,6 +24,9 @@ current_question = 0
 
 markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton('Да'), KeyboardButton('Нет'))
+
+# keyboard = InlineKeyboardMarkup()
+# keyboard.add(InlineKeyboardButton('Да', callback_data='Да'), InlineKeyboardButton('Нет', callback_data='Нет'))
 
 
 @bot.message_handler(commands=['start'])
