@@ -12,7 +12,18 @@ bot = telebot.TeleBot(token=token)
 data_path = 'users.json'
 user_data = load_user_data(data_path)
 
-test_counter = 0
+questions = [
+    {"text": "1. Python - это язык программирования?", "options": ["Да", "Нет"]},
+    {"text": "2. Переменные в Python можно создавать без явного указания типа данных?", "options": ["Да", "Нет"]},
+    {"text": "3. В Python комментарии начинаются с символа '#'", "options": ["Да", "Нет"]},
+    {"text": "4. Функция len() используется для определения длины списка в Python?", "options": ["Да", "Нет"]},
+    {"text": "5. В Python ключевое слово для определения функции - def?", "options": ["Да", "Нет"]}
+]
+
+correct_answers = ["Да", "Да", "Да", "Да", "Да"]
+
+user_answers = []
+current_question = 0
 
 markup = ReplyKeyboardMarkup(resize_keyboard=True)
 markup.add(KeyboardButton('Да'))
@@ -26,6 +37,9 @@ def say_start(message):
                                       f"Для полного ознакомления с ботом напишите команду: /help\n"
                                       f"Для начала теста введите команду /test")
 
+
+@bot.message_handler(commands=['test'])
+def create_user(message):
     user_id = str(message.from_user.id)
     if user_id not in user_data:
         user_data[user_id] = {}
@@ -35,32 +49,47 @@ def say_start(message):
         print(user_id)
         print(user_data)
     elif user_id in user_data:
-        bot.send_message(message.chat.id, f"{message.from_user.first_name} рад вас снова видеть")
+        bot.send_message(message.chat.id, f"{message.from_user.first_name} рад вас снова видеть, хотите еще пройти тест?")
+    start_test(message)
 
 
-@bot.message_handler(commands=['test'])
-def first_question(message):
-    bot.send_message(message.chat.id, 'Число может быть ключем в словаре Python?', reply_markup=markup)
+def start_test(message):
+    global user_answers, current_question
+    user_answers = []
+    current_question = 0
+    send_question(message.chat.id)
+
+
+def send_question(chat_id):
+    bot.send_message(chat_id, questions[current_question]["text"], reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
-def first_answer_second_question(message):
-    if message.text == 'Да':
-        global test_counter
-        test_counter += 1
-        print(test_counter)
-    bot.send_message(message.chat.id, 'Ключевое слово Return останавливает выполнение функции?', reply_markup=markup)
-    second_answer_third_question(message)
+def handle_answer(message):
+    global user_answers, current_question
 
-# @bot.message_handler()
+    if current_question < len(questions):
+        user_answers.append(message.text)
+
+        current_question += 1
+        if current_question < len(questions):
+            send_question(message.chat.id)
+        else:
+            finish_test(message)
+    else:
+        bot.send_message(message.chat.id, "Тест уже завершен. Напишите /start, чтобы начать заново.")
 
 
-def second_answer_third_question(message):
-    if message.text == 'Да':
-        global test_counter
-        test_counter += 1
-        print(test_counter)
-    bot.send_message(message.chat.id, 'Список(list) имеет упорядоченый набор элементов', reply_markup=markup)
+def finish_test(message):
+    global user_answers, correct_answers
+    user_id = str(message.from_user.id)
+
+    score = sum(1 for user, correct in zip(user_answers, correct_answers) if user == correct)
+    bot.send_message(message.chat.id, f"Тест завершен!\nВаш результат: {score} из {len(questions)}.")
+
+    user_data[user_id]['test_points'] = score
+    print(user_data[user_id]['test_points'])
+    save_user_data(user_data, data_path)
 
 
 bot.polling()
