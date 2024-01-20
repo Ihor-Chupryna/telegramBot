@@ -35,11 +35,8 @@ def create_user(message):
         print(user_id)
         print(user_data)
     elif user_id in user_data:
-        bot.send_message(message.chat.id, f"{message.from_user.first_name} рад вас снова видеть")
-        user_data[user_id]['money'] = 0
-        user_data[user_id]['weapon'] = ""
-        user_data[user_id]['magic'] = ""
-        save_user_data(user_data, data_path)
+        bot.send_message(message.chat.id, f"{message.from_user.first_name, user_data[user_id]['money'], user_data[user_id]['weapon']} рад вас снова видеть")
+
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
     keyboard.add(telebot.types.KeyboardButton('Kingdom Light'))
     keyboard.add(telebot.types.KeyboardButton('Kingdom Dark'))
@@ -79,7 +76,7 @@ def location_two(message):
 
         keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
         keyboard.add(telebot.types.KeyboardButton('sword'))
-        keyboard.add(telebot.types.KeyboardButton('shield'))
+        keyboard.add(telebot.types.KeyboardButton('spear'))
         keyboard.add(telebot.types.KeyboardButton('axe'))
 
         bot.send_photo(message.chat.id, open(locations["forest"]["image"], "rb"))
@@ -96,7 +93,7 @@ def take_weapon(message):
     if message.text == 'sword':
         bot.send_message(message.chat.id, "You take sword")
         user_data[user_id]['weapon'] = 'sword'
-    elif message.text == 'shield':
+    elif message.text == 'spear':
         bot.send_message(message.chat.id, "You take spear")
         user_data[user_id]['weapon'] = 'spear'
     elif message.text == 'axe':
@@ -105,7 +102,7 @@ def take_weapon(message):
 
     save_user_data(user_data, data_path)
     print(user_data)
-
+    bot.send_message(message.chat.id, "Replay /quest")
 @bot.message_handler()
 def say_finish(chat_id):
     bot.send_message(chat_id, "finish game")
