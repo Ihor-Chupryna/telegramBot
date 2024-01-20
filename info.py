@@ -20,7 +20,30 @@ bot_responses = {
     "buy": ["До свидания!", "Удачи, путник!", "До скорой встречи!", "Возвращайтесь, если что!",
             "Да пребудет с вами сила", "Ещё увидимся!"]}
 
-# user_data = {}
+locations = {
+    "kingdom_light": {
+        "name": "Kingdom Light",
+        "descriptions": "Kingdom Light - bla bla bla",
+        "image": "images/light_kn.PNG"
+    },
+    "kingdom_dark": {
+        "name": "Kingdom Dark",
+        "descriptions": "Kingdom Dark - bla bla bla",
+        "image": "images/dark_kn.PNG"
+    },
+    "forest": {
+        "name": "Forest",
+        "descriptions": "Forest - bla bla bla",
+        "image": "images/forest.PNG"
+    },
+    "desert": {
+        "name": "Desert",
+        "descriptions": "Desert - bla bla bla",
+        "image": "images/desert.PNG"
+    },
+}
+
+
 
 
 
