@@ -13,7 +13,11 @@ data_path = 'users.json'
 user_data = load_user_data(data_path)
 
 
-
+def create_two_btn(btn1_data, btn2_data):
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(InlineKeyboardButton(btn1_data, callback_data=btn1_data))
+    keyboard.add(InlineKeyboardButton(btn2_data, callback_data=btn2_data))
+    return keyboard
 
 
 @bot.message_handler(commands=['start'])
@@ -36,36 +40,38 @@ def create_user(message):
     elif user_id in user_data:
         bot.send_message(message.chat.id, f"{message.from_user.first_name} рад вас снова видеть")
 
-    keyboard = InlineKeyboardMarkup()
-    keyboard.add(InlineKeyboardButton('Kingdom Light', callback_data='kingdom_light'))
-    keyboard.add(InlineKeyboardButton('Kingdom Dark', callback_data='kingdom_dark'))
+    # keyboard = InlineKeyboardMarkup()
+    # keyboard.add(InlineKeyboardButton('Kingdom Light', callback_data='kingdom_light'))
+    # keyboard.add(InlineKeyboardButton('Kingdom Dark', callback_data='kingdom_dark'))
+    keyboard = create_two_btn('Kingdom Light', 'Kingdom Dark')
 
     bot.send_message(message.chat.id, "Choose a kingdom:", reply_markup=keyboard)
 
 
-@bot.callback_query_handler(func=lambda call: call.data in ["kingdom_light", "kingdom_dark"])
+@bot.callback_query_handler(func=lambda call: call.data in ["Kingdom Light", "Kingdom Dark"])
 def location_selected(call):
     # user_id = str(call.from_user.id)
-    if call.data == "kingdom_light":
-        keyboard = InlineKeyboardMarkup()
-        keyboard.add(InlineKeyboardButton('Forest', callback_data='forest'))
-        keyboard.add(InlineKeyboardButton('Desert', callback_data='desert'))
+    if call.data == "Kingdom Light":
+        # keyboard = InlineKeyboardMarkup()
+        # keyboard.add(InlineKeyboardButton('Forest', callback_data='forest'))
+        # keyboard.add(InlineKeyboardButton('Desert', callback_data='desert'))
+        keyboard = create_two_btn('Forest', 'Desert')
 
         bot.send_message(call.message.chat.id, f"Welcome to {locations['kingdom_light']['name']}")
         bot.send_photo(call.message.chat.id, open(locations["kingdom_light"]["image"], "rb"))
         bot.send_message(call.message.chat.id, "Kingdom Light. Choose a location:", reply_markup=keyboard)
-    elif call.data == "kingdom_dark":
+    elif call.data == "Kingdom Dark":
         bot.send_message(call.message.chat.id, "Welcome to Kingdom Dark")
         bot.send_photo(call.message.chat.id, open(locations["kingdom_dark"]["image"], "rb"))
         say_finish(call.message.chat.id)
 
 
-@bot.callback_query_handler(func=lambda call: call.data in ["forest", "desert"])
+@bot.callback_query_handler(func=lambda call: call.data in ["Forest", "Desert"])
 def location_selected(call):
-    if call.data == "forest":
+    if call.data == "Forest":
         bot.send_message(call.message.chat.id, "Forest Hello")
         bot.send_photo(call.message.chat.id, open(locations["forest"]["image"], "rb"))
-    elif call.data == "desert":
+    elif call.data == "Desert":
         bot.send_message(call.message.chat.id, "Desert Hello")
         bot.send_photo(call.message.chat.id, open(locations["desert"]["image"], "rb"))
 
