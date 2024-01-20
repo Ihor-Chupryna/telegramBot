@@ -43,10 +43,6 @@ def create_user(message):
     # keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
     # keyboard.add(KeyboardButton('Kingdom Light'))
     # keyboard.add(KeyboardButton('Kingdom Dark'))
-    keyboard = InlineKeyboardMarkup()
-    keyboard.add(InlineKeyboardButton('Kingdom Light', callback_data='kingdom_light'))
-    keyboard.add(InlineKeyboardButton('Kingdom Dark', callback_data='kingdom_dark'))
-
 
     bot.send_message(message.chat.id, f"Choose a kingdom: Kingdom Light or Kingdom Dark", reply_markup=keyboard)
 
